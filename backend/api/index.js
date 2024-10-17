@@ -160,6 +160,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Server is working");
+});
+
 // Endpoint to fetch available video and audio formats
 app.get("/formats", async (req, res) => {
   const videoUrl = req.query.url;
