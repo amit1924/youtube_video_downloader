@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #b2e3f7, #4a90e2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .title {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+  }
+  
+  .input,
+  .select,
+  .fetch-button,
+  .download-button {
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 300px;
+  }
+  
+  .fetch-button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .download-button {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .loading-message {
+    color: yellow;
+    margin-top: 10px;
+    animation: pulse 1s infinite;
+  }
+  
+  /* Cartoon Animation */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  /* Add more animations as needed */
+  
