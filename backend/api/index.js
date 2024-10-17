@@ -142,19 +142,7 @@ const PORT = 3000;
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (
-        origin ===
-          "https://youtube-video-downloader-frontend-rust.vercel.app" ||
-        !origin
-      ) {
-        // Allow the request if it's from the frontend or if no origin is specified (for localhost testing)
-        callback(null, true);
-      } else {
-        // Otherwise, block the request
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "https://youtube-video-downloader-frontend-rust.vercel.app",
     methods: ["GET"],
     credentials: true,
   })
