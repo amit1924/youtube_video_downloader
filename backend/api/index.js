@@ -142,7 +142,7 @@ const PORT = 3000;
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://youtube-video-downloader-frontend-rust.vercel.app/",
     methods: ["GET"],
     credentials: true,
   })

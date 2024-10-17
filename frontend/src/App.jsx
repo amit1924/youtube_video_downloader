@@ -33,10 +33,13 @@ const App = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get(`http://localhost:3000/download`, {
-        params: { url: videoUrl, itag: selectedFormat }, // Pass itag here
-        responseType: "blob",
-      });
+      const response = await axios.get(
+        `https://youtube-video-downloader-backend-steel.vercel.app/download`,
+        {
+          params: { url: videoUrl, itag: selectedFormat }, // Pass itag here
+          responseType: "blob",
+        }
+      );
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const a = document.createElement("a");
