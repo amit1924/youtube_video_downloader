@@ -14,9 +14,12 @@ const App = () => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3000/formats`, {
-        params: { url: videoUrl },
-      });
+      const response = await axios.get(
+        `https://youtube-video-downloader-backend-steel.vercel.app/formats`,
+        {
+          params: { url: videoUrl },
+        }
+      );
       setFormats(response.data.formats); // Set available formats
     } catch (error) {
       console.error("Error fetching formats:", error);
