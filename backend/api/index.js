@@ -261,54 +261,39 @@ app.get("/", (req, res) => {
 app.get("/formats", async (req, res) => {
   const videoUrl = req.query.url;
 
-  if (!videoUrl) {
-    return res.status(400).send("Video URL is required");
+  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+    return res.status(400).send("Valid YouTube URL is required");
   }
 
   try {
-    // Validate YouTube URL
-    if (!ytdl.validateURL(videoUrl)) {
-      return res.status(400).send("Invalid YouTube URL");
+    const info = await ytdl.getInfo(videoUrl);
+    if (!info || !info.formats) {
+      return res
+        .status(500)
+        .send("No formats available for the given video URL.");
     }
 
-    // Fetch video info
-    const info = await ytdl.getInfo(videoUrl);
-
-    // Separate video and audio formats
-    const videoFormats = info.formats
-      .filter((format) => format.hasVideo && format.hasAudio)
+    const formats = info.formats
+      .filter(
+        (format) =>
+          (format.hasVideo && format.hasAudio) ||
+          (format.hasAudio && !format.hasVideo)
+      )
       .map((format) => ({
         itag: format.itag,
-        quality: format.qualityLabel,
-        resolution: format.height,
+        quality: format.qualityLabel || format.audioQuality,
         type: format.mimeType,
-        isVideo: true,
-      }))
-      .sort((a, b) => b.itag - a.itag);
-
-    const audioFormats = info.formats
-      .filter((format) => format.hasAudio && !format.hasVideo)
-      .map((format) => ({
-        itag: format.itag,
-        quality: format.audioQuality,
-        type: format.mimeType,
-        isVideo: false,
-      }))
-      .sort((a, b) => b.itag - a.itag);
-
-    const formats = [...videoFormats, ...audioFormats];
+        isVideo: format.hasVideo,
+      }));
 
     res.json({ formats });
   } catch (error) {
-    console.error("Error fetching formats:", error.message);
-
-    // Check for specific YouTube-related errors
+    console.error("Error fetching formats:", error);
     if (error.message.includes("429")) {
       return res
         .status(429)
         .send("YouTube rate limit exceeded. Try again later.");
     }
-
     res.status(500).send("Error fetching video formats");
   }
 });
