@@ -257,6 +257,7 @@ app.get("/", (req, res) => {
 });
 
 // Endpoint to fetch available video and audio formats
+// Endpoint to fetch available video and audio formats
 app.get("/formats", async (req, res) => {
   const videoUrl = req.query.url;
 
@@ -264,14 +265,16 @@ app.get("/formats", async (req, res) => {
     return res.status(400).send("Video URL is required");
   }
 
-  // Validate YouTube URL
-  if (!ytdl.validateURL(videoUrl)) {
-    return res.status(400).send("Invalid YouTube URL");
-  }
-
   try {
+    // Validate YouTube URL
+    if (!ytdl.validateURL(videoUrl)) {
+      return res.status(400).send("Invalid YouTube URL");
+    }
+
+    // Fetch video info
     const info = await ytdl.getInfo(videoUrl);
 
+    // Separate video and audio formats
     const videoFormats = info.formats
       .filter((format) => format.hasVideo && format.hasAudio)
       .map((format) => ({
@@ -298,6 +301,14 @@ app.get("/formats", async (req, res) => {
     res.json({ formats });
   } catch (error) {
     console.error("Error fetching formats:", error.message);
+
+    // Check for specific YouTube-related errors
+    if (error.message.includes("429")) {
+      return res
+        .status(429)
+        .send("YouTube rate limit exceeded. Try again later.");
+    }
+
     res.status(500).send("Error fetching video formats");
   }
 });
